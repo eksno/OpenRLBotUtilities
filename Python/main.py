@@ -153,6 +153,14 @@ class SplinePathFinding:
     return [Vector3([x, y, 70]) for x, y in zip(spline_locations_x, spline_locations_y)], spline(points, thresholds, distances)
 
 
+def get_circle_points(num_points, radius):
+  increment = 360 / num_points
+  return [[radius * math.sin(x / num_points * -increment), radius * math.cos(y / num_points * increment)]
+          for x, y in zip(range(num_points), range(num_points))] +\
+         [[radius * math.sin(x * -increment), radius * math.cos(y * increment)]
+          for x, y in zip(range(num_points), range(num_points))]
+                                                                                  
+                                                                                  
 def sign(x):
   """Returns -1 if number is negative or zero, otherwise it return 1."""
   if x <= 0:
