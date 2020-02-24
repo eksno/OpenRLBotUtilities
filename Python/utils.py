@@ -13,7 +13,7 @@ def to_location(target):
 
 def rotator_to_matrix(object):
 	r = object.rotation.data
-	CR = math.cos(r[2])
+	CR = math.cos(r[2])w
 	SR = math.sin(r[2])
 	CP = math.cos(r[0])
 	SP = math.sin(r[0])
