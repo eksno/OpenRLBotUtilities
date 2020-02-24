@@ -1,14 +1,14 @@
 def to_location(target):
 	if isinstance(target, Vector3):
-  		return target
+		return target
 	elif isinstance(target, list):
-  		return Vector3(target)
+		return Vector3(target)
 	elif isinstance(target, tuple):
-  		return Vector3(list(target))
+		return Vector3(list(target))
 	elif isinstance(target, np.ndarray):
-  		return Vector3(target.tolist())
+		return Vector3(target.tolist())
 	else:
-  		return target.location
+		return target.location
 
 
 def rotator_to_matrix(object):
