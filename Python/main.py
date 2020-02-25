@@ -8,53 +8,54 @@ from utils import *
 
 
 class Vector3:
-	"""
-	Creates a Vector3 Object that can be used for any data which need 3 numbers.
-	Create an Object by calling 'Vector3([x, y, z])' where x, y, z are your values.
-	"""
+    """
+    Creates a Vector3 Object that can be used for any data which need 3 numbers.
+    Create an Object by calling 'Vector3([x, y, z])' where x, y, z are your values.
+    """
 
-	def __init__(self, data):
-		self.data = data
+    def __init__(self, data):
+        self.data = data
 
-	def __add__(self, other):
-		return Vector3([self.data[0] + other.data[0], self.data[1] + other.data[1], self.data[2] + other.data[2]])
+    def __add__(self, other):
+        return Vector3([self.data[0] + other.data[0], self.data[1] + other.data[1], self.data[2] + other.data[2]])
 
-	def __sub__(self, other):
-		return Vector3([self.data[0] - other.data[0], self.data[1] - other.data[1], self.data[2] - other.data[2]])
+    def __sub__(self, other):
+        return Vector3([self.data[0] - other.data[0], self.data[1] - other.data[1], self.data[2] - other.data[2]])
 
-	def __mul__(self, other):
-		return Vector3([self.data[0] * other, self.data[1] * other, self.data[2] * other])
+    def __mul__(self, other):
+        return Vector3([self.data[0] * other, self.data[1] * other, self.data[2] * other])
 
-	def __truediv__(self, other):
-		return Vector3([self.data[0] / other, self.data[1] / other, self.data[2] / other])
+    def __truediv__(self, other):
+        return Vector3([self.data[0] / other, self.data[1] / other, self.data[2] / other])
 
-	def __abs__(self):
-		return Vector3([abs(self.data[0]), abs(self.data[1]), abs(self.data[2])])
+    def __abs__(self):
+        return Vector3([abs(self.data[0]), abs(self.data[1]), abs(self.data[2])])
 
-	def __eq__(self, other):
-		return self.data[0] == other.data[0], self.data[1] == other.data[1], self.data[2] == other.data[2]
+    def __eq__(self, other):
+        return self.data[0] == other.data[0], self.data[1] == other.data[1], self.data[2] == other.data[2]
 
-	def __gt__(self, other):
-		return self.data[0] > other.data[0], self.data[1] > other.data[1], self.data[2] > other.data[2]
+    def __gt__(self, other):
+        return self.data[0] > other.data[0], self.data[1] > other.data[1], self.data[2] > other.data[2]
 
-	def __lt__(self, other):
-		return self.data[0] < other.data[0], self.data[1] < other.data[1], self.data[2] < other.data[2]
+    def __lt__(self, other):
+        return self.data[0] < other.data[0], self.data[1] < other.data[1], self.data[2] < other.data[2]
 
-	def tolist(self):
-		return [self.data[0], self.data[1], self.data[2]]
+    def tolist(self):
+        return [self.data[0], self.data[1], self.data[2]]
 
-	def cap(self, low, high):
-		return Vector3([max(min(x, high[0]), low[0]], [max(min(x, high[1]), low[1]], [max(min(x, high[2]), low[2]])
+    def cap(self, low, high):
+        return Vector3(max(min(self.data[0], high[0]), low[0]), max(min(self.data[0], high[0]), low[0]),
+                       max(min(self.data[2], high[2]), low[2]))
 
-	def magnitude(self):
-		return math.sqrt((self.data[0] * self.data[0]) + (self.data[1] * self.data[1]) + (self.data[2] * self.data[2]))
+    def magnitude(self):
+        return math.sqrt((self.data[0] * self.data[0]) + (self.data[1] * self.data[1]) + (self.data[2] * self.data[2]))
 
-	def normalize(self):
-		mag = self.magnitude()
-		if mag != 0:
-			return Vector3([self.data[0] / mag, self.data[1] / mag, self.data[2] / mag])
-		else:
-			return Vector3([0, 0, 0])
+    def normalize(self):
+        mag = self.magnitude()
+        if mag != 0:
+            return Vector3([self.data[0] / mag, self.data[1] / mag, self.data[2] / mag])
+        else:
+            return Vector3([0, 0, 0])
 
 
 class Object:
