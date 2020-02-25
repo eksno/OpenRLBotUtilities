@@ -237,7 +237,7 @@ def sign(x):
 	else:
 		return 1
 
-	def to_location(target):
+def to_location(target):
 	if isinstance(target, Vector3):
 		return target
 	elif isinstance(target, list):
