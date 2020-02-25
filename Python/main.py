@@ -132,54 +132,95 @@ class Dodger:
                                                                                   
                                                                                   
 class SplinePathFinding:
-	"""A Pathfinding script basecd on scipy's iterpolate spline functions"""
+    """A pathfinding script based on scipy's interpolate spline functions"""
+    def __init__(self):
+        self.stage = 0
+        self.finished = False
+        self.num_points = 0
+        self.spline_locations = None
+        self.spline_thresholds = None
 
- 	def __init__(self):
-		self.stage = 0
-		self.finished = False
-		self.num_points = 0
-		self.spline_locations = None
-		self.spline_thresholds = None
+    def run(self, agent, locations, thresholds, num_waypoints=63, dynamic=True):
+        """
+        Returns a Vector3 that is calculated based of a spline. When you reach that waypoint it moves to the next.
+        This way you can get smooth rotation from position to position and reach each point from an angle you want.
 
-	def calculate(self, num_points, locations, thresholds, curve_distance=20):
-		"""
-		Calculates a spline (a series of Vector3's)
-		 - 'locations' is a list of Vector3's which the spline will touch in order.
-		 - 'thresholds' is to be used by you to calculate which spline location it should be driving towards.
-		 - 'num_points' is the amount of Vector3's you end up with. For a finer curve, use a higher number.
-		 - 'curve' is smoothing of the curve.
-		"""
-		self.num_points = num_points
+        NOTE: You need to have a minimum of 4 locations and thresholds for this to work!
 
-		distances = [0]
-		for i in range(len(locations) - 1):
-		try:
-			distances.append(sum([abs(locations[i][0] - locations[i + 1][0]),
-								  abs(locations[i][1] - locations[i + 1][1])])
-							 + distances[i])
-		except IndexError:
-			distances.append(sum([abs(locations[i][0] - locations[i + 1][0]),
-								  abs(locations[i][1] - locations[i + 1][1])]))
+         - 'locations' is a list of Vector3's which the spline will touch in order.
+         - 'thresholds' is a list of how close the bot should be to a waypoint before advancing to the next one.
+         - 'num_points' is the amount of Vector3's you end up with. For a finer curve, use a higher number.
+         - 'curve' is smoothing of the curve.
 
-		distances = [dist / (max(distances) / curve_distance) for dist in distances]
+        For Example:
+        If you want the car to hit the ball you set one location to the balls locations. Now you need 3 more.
+        If you want to make sure you are covering your own goal before hitting th goal,
+        you can set the first location to your goal.
+        If you want the car to hit the ball towards the enemies goal you can set the last location to their goal.
 
-		xyz_locations = []
-		for axis in range(len(locations[0])):
-			xyz_locations.append([])
-			for i in range(len(locations)):
-				xyz_locations[axis].append(locations[i][axis])
+        Advice:
+        Don't have 4+ locations?
+        If you don't have 4 locations, you can cheat a bit by duping locations, make sure to change it a little it.
+        For example if the last location is the enemies goal [0, 5120 * -sign(agent.me.team), 0],
+        you can make the last point a little further inside the goal [0, 5500 * -sign(agent.me.team), 0].
+        """
+        if len(locations) == len(thresholds):
+            spline_waypoints, spline_thresholds = self.calculate(num_waypoints, locations, thresholds)
 
-		max_dist = (len(locations) - 1) * max(distances)
-		increment = max_dist / (num_points - 1)
+            try:
+                if agent.me.distance_to_target_2d(spline_waypoints[self.stage]) \
+                        <= spline_thresholds[self.stage]:
+                    self.stage += 1
+                elif dynamic and agent.me.distance_to_target_2d(spline_waypoints[self.stage - 1]) \
+                        >= spline_thresholds[self.stage - 1]:
+                    self.stage -= 1
+            except IndexError:
+                pass
 
-		points = []
-		for i in range(num_points):
-			points.append(i * increment)
+            return Vector3(spline_waypoints[self.stage]).cap([-4000, -5000, 0], [4000, 5000, 2044])
+        else:
+            raise Exception("'locations' and 'thresholds' are different sizes. ({}, {])"
+                            .format(len(locations), len(thresholds)))
 
-		spline_locations_x = spline(points, xyz_locations[0], distances)
-		spline_locations_y = spline(points, xyz_locations[1], distances)
-		return [Vector3([x, y, 70]) for x, y in zip(spline_locations_x, spline_locations_y)], spline(points, thresholds, distances)
+    def calculate(self, num_points, locations, thresholds, curve_distance=20):
+        """
+        Calculates a spline (a series of Vector3's) called waypoints.
+         - 'locations' is a list of Vector3's which the spline will touch in order.
+         - 'thresholds' is a list of how close the bot should be to a waypoint before advancing to the next one.
+         - 'num_points' is the amount of Vector3's you end up with. For a finer curve, use a higher number.
+         - 'curve' is smoothing of the curve.
+        """
+        self.num_points = num_points
 
+        distances = [0]
+        for i in range(len(locations) - 1):
+            try:
+                distances.append(sum([abs(locations[i][0] - locations[i + 1][0]),
+                                      abs(locations[i][1] - locations[i + 1][1])])
+                                 + distances[i])
+            except IndexError:
+                distances.append(sum([abs(locations[i][0] - locations[i + 1][0]),
+                                      abs(locations[i][1] - locations[i + 1][1])]))
+
+        distances = [dist / (max(distances) / curve_distance) for dist in distances]
+
+        xyz_locations = []
+        for axis in range(len(locations[0])):
+            xyz_locations.append([])
+            for i in range(len(locations)):
+                xyz_locations[axis].append(locations[i][axis])
+
+        max_dist = (len(locations) - 1) * max(distances)
+        increment = max_dist / (num_points - 1)
+
+        points = []
+        for i in range(num_points):
+            points.append(i * increment)
+
+        spline_locations_x = spline(points, xyz_locations[0], distances)
+        spline_locations_y = spline(points, xyz_locations[1], distances)
+        return [Vector3([x, y, 70]) for x, y in zip(spline_locations_x, spline_locations_y)],\
+               spline(points, thresholds, distances)
 
 def get_circle_points(num_points, radius):
 	increment = 360 / num_points
@@ -195,3 +236,35 @@ def sign(x):
 		return -1
 	else:
 		return 1
+
+	def to_location(target):
+	if isinstance(target, Vector3):
+		return target
+	elif isinstance(target, list):
+		return Vector3(target)
+	elif isinstance(target, tuple):
+		return Vector3(list(target))
+	elif isinstance(target, np.ndarray):
+		return Vector3(target.tolist())
+	else:
+		return target.location
+
+
+def rotator_to_matrix(object):
+	r = object.rotation.data
+	CR = math.cos(r[2])
+	SR = math.sin(r[2])
+	CP = math.cos(r[0])
+	SP = math.sin(r[0])
+	CY = math.cos(r[1])
+	SY = math.sin(r[1])
+
+	matrix = []
+	matrix.append(Vector3([CP*CY, CP*SY, SP]))
+	matrix.append(Vector3([CY*SP*SR-CR*SY, SY*SP*SR+CR*CY, -CP * SR]))
+	matrix.append(Vector3([-CR*CY*SP-SR*SY, -CR*SY*SP+SR*CY, CP*CR]))
+	return matrix
+    
+def spline(points, locations, distances):
+	tck = interpolate.splrep(distances, locations)
+	return interpolate.splev(points, tck)
