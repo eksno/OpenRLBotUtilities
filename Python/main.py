@@ -97,13 +97,13 @@ class Object:
 		return math.sqrt(diff.data[0]**2 + diff.data[1]**2)
 
 	def angle_to_target(self, target):
-			"""Returns angle to target between -pi and pi."""
-			if isinstance(target, list):
-				local_location = self.to_local(target)
-				angle = math.atan2(to_location(local_location).data[1], to_location(local_location).data[0])
-			else:
-				angle = 0
-			return angle
+		"""Returns angle to target between -pi and pi."""
+		if isinstance(target, list):
+			local_location = self.to_local(target)
+			angle = math.atan2(to_location(local_location).data[1], to_location(local_location).data[0])
+		else:
+			angle = 0
+		return angle
 
 
 class Dodger:
