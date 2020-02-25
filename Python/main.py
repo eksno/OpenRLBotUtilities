@@ -13,46 +13,46 @@ class Vector3:
 	Create an Object by calling 'Vector3([x, y, z])' where x, y, z are your values.
 	"""
 
-def __init__(self, data):
-    self.data = data
+	def __init__(self, data):
+		self.data = data
 
-def __add__(self, other):
-    return Vector3([self.data[0] + other.data[0], self.data[1] + other.data[1], self.data[2] + other.data[2]])
+	def __add__(self, other):
+		return Vector3([self.data[0] + other.data[0], self.data[1] + other.data[1], self.data[2] + other.data[2]])
 
-def __sub__(self, other):
-    return Vector3([self.data[0] - other.data[0], self.data[1] - other.data[1], self.data[2] - other.data[2]])
+	def __sub__(self, other):
+		return Vector3([self.data[0] - other.data[0], self.data[1] - other.data[1], self.data[2] - other.data[2]])
 
-def __mul__(self, other):
-    return Vector3([self.data[0] * other, self.data[1] * other, self.data[2] * other])
+	def __mul__(self, other):
+		return Vector3([self.data[0] * other, self.data[1] * other, self.data[2] * other])
 
-def __truediv__(self, other):
-    return Vector3([self.data[0] / other, self.data[1] / other, self.data[2] / other])
+	def __truediv__(self, other):
+		return Vector3([self.data[0] / other, self.data[1] / other, self.data[2] / other])
 
-def __abs__(self):
-    return Vector3([abs(self.data[0]), abs(self.data[1]), abs(self.data[2])])
+	def __abs__(self):
+		return Vector3([abs(self.data[0]), abs(self.data[1]), abs(self.data[2])])
 
-def __eq__(self, other):
-    return self.data[0] == other.data[0], self.data[1] == other.data[1], self.data[2] == other.data[2]
+	def __eq__(self, other):
+		return self.data[0] == other.data[0], self.data[1] == other.data[1], self.data[2] == other.data[2]
 
-def __gt__(self, other):
-    return self.data[0] > other.data[0], self.data[1] > other.data[1], self.data[2] > other.data[2]
+	def __gt__(self, other):
+		return self.data[0] > other.data[0], self.data[1] > other.data[1], self.data[2] > other.data[2]
 
-def __lt__(self, other):
-    return self.data[0] < other.data[0], self.data[1] < other.data[1], self.data[2] < other.data[2]
+	def __lt__(self, other):
+		return self.data[0] < other.data[0], self.data[1] < other.data[1], self.data[2] < other.data[2]
 
-def tolist(self):
-    return [self.data[0], self.data[1], self.data[2]]
-    
-def cap(self, low, high):
-    return Vector3([max(min(x, high[0]), low[0]], [max(min(x, high[1]), low[1]], [max(min(x, high[2]), low[2]])
+	def tolist(self):
+		return [self.data[0], self.data[1], self.data[2]]
 
-def magnitude(self):
-    return math.sqrt((self.data[0] * self.data[0]) + (self.data[1] * self.data[1]) + (self.data[2] * self.data[2]))
+	def cap(self, low, high):
+		return Vector3([max(min(x, high[0]), low[0]], [max(min(x, high[1]), low[1]], [max(min(x, high[2]), low[2]])
+
+	def magnitude(self):
+		return math.sqrt((self.data[0] * self.data[0]) + (self.data[1] * self.data[1]) + (self.data[2] * self.data[2]))
 
 	def normalize(self):
 		mag = self.magnitude()
 		if mag != 0:
-		    return Vector3([self.data[0] / mag, self.data[1] / mag, self.data[2] / mag])
+			return Vector3([self.data[0] / mag, self.data[1] / mag, self.data[2] / mag])
 		else:
 			return Vector3([0, 0, 0])
 
@@ -97,13 +97,13 @@ class Object:
 		return math.sqrt(diff.data[0]**2 + diff.data[1]**2)
 
 	def angle_to_target(self, target):
-		"""Returns angle to target between -pi and pi."""
-		if isinstance(target, list):
-		  local_location = self.to_local(target)
-		  angle = math.atan2(to_location(local_location).data[1], to_location(local_location).data[0])
-		else:
-		  angle = 0
-		return angle
+			"""Returns angle to target between -pi and pi."""
+			if isinstance(target, list):
+				local_location = self.to_local(target)
+				angle = math.atan2(to_location(local_location).data[1], to_location(local_location).data[0])
+			else:
+				angle = 0
+			return angle
 
 
 class Dodger:
@@ -183,9 +183,9 @@ class SplinePathFinding:
 def get_circle_points(num_points, radius):
 	increment = 360 / num_points
 	return [[radius * math.sin(x / num_points * -increment), radius * math.cos(y / num_points * increment)]
-		  for x, y in zip(range(num_points), range(num_points))] +\
-		 [[radius * math.sin(x * -increment), radius * math.cos(y * increment)]
-		  for x, y in zip(range(num_points), range(num_points))]
+		   for x, y in zip(range(num_points), range(num_points))] +\
+		   [[radius * math.sin(x * -increment), radius * math.cos(y * increment)]
+		   for x, y in zip(range(num_points), range(num_points))]
                                                                                   
                                                                                   
 def sign(x):
