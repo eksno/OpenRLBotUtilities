@@ -1,6 +1,8 @@
 import math
 import numpy as np
 
+from utils import *
+
 class Vector3:
     """
     Creates a Vector3 Object that can be used for any data which need 3 numbers.
