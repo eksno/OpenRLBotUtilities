@@ -129,11 +129,12 @@ class Object:
 
 class Data:
     def __init__(self):
+        self.me = Object()
         self.ball = Object()
         self.players = []
         self.is_kickoff = False
 
-    def preprocess(self, packet):
+    def preprocess(self, agent, packet):
         """ Collects and formats game data """
         self.is_kickoff = packet.game_info.is_kickoff_pause
 
@@ -179,7 +180,10 @@ class Data:
             if not flag:
                 # There is no last frame car data so we create a new car.
                 self.players.append(temp)
-
+        
+        # Get our bot.
+        self.me = self.players[agent.index]
+        
         # Collect ball information and updates agent.ball accordingly.
         ball = packet.game_ball.physics
         self.ball.location.data = [ball.location.x,
