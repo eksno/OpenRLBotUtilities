@@ -18,7 +18,7 @@ Currently the only way to get the code is by either cloning the project or preff
 
 I try to supply as much information in the code as possible, but a better README is comming soon...
 
-# Contact
+# Contact Me
 If you want to contact me, you can do so through discord. If you have any kind of question, suggestion or critisism, feel free to message me at any time!
 
 Discord: Eksnoverse #1521 (dm's are open)
