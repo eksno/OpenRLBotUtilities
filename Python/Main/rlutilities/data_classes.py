@@ -1,8 +1,6 @@
 import math
 import numpy as np
 
-from rlutilities.utils import *
-
 
 class Vector3:
     """
@@ -87,13 +85,6 @@ class Object:
         self.matrix = None
         self.index = None
 
-    def calculate_data(self):
-        """Calculates matrix and local_angular_velocity."""
-        self.matrix = rotator_to_matrix(self)
-        self.local_angular_velocity = Vector3([self.angular_velocity * self.matrix[0],
-                                               self.angular_velocity * self.matrix[1],
-                                               self.angular_velocity * self.matrix[2]])
-
     def to_local(self, target):
         """Returns target's local position."""
         x = (to_value(target, 'location') - self.location) * self.matrix[0]
@@ -107,12 +98,12 @@ class Object:
 
     def distance_to_target_2d(self, target):
         """Calculates 2d distance to target."""
-        diff = self.location - to_value(target, 'location')
+        diff = self.location - Vector3(to_value(target, 'location'))
         return math.sqrt(diff.data[0] ** 2 + diff.data[1] ** 2)
 
     def angle_to_target(self, target, local=True):
         """Returns angle to target between -pi and pi."""
-        diff = to_value(target, 'location') - self.location
+        diff = Vector3(to_value(target, 'location')) - self.location
         angle_to_target = math.atan2(diff.data[1], diff.data[0])
 
         if local:
@@ -125,6 +116,13 @@ class Object:
                 local_angle_to_target -= 2 * math.pi
             return local_angle_to_target
         return math.atan2(diff.data[1], diff.data[0])
+
+    def calculate_data(self):
+        """Calculates matrix and local_angular_velocity."""
+        self.matrix = rotator_to_matrix(self)
+        self.local_angular_velocity = Vector3([self.angular_velocity * self.matrix[0],
+                                               self.angular_velocity * self.matrix[1],
+                                               self.angular_velocity * self.matrix[2]])
 
 
 class Data:
@@ -180,10 +178,10 @@ class Data:
             if not flag:
                 # There is no last frame car data so we create a new car.
                 self.players.append(temp)
-        
+
         # Get our bot.
         self.me = self.players[agent.index]
-        
+
         # Collect ball information and updates agent.ball accordingly.
         ball = packet.game_ball.physics
         self.ball.location.data = [ball.location.x,
@@ -203,3 +201,41 @@ class Data:
                                            ball.angular_velocity.z]
 
         self.ball.calculate_data()
+
+
+def sign(x):
+    """Returns -1 if number is negative or zero, otherwise it return 1."""
+    return -1 if x <= 0 else 1
+
+
+def to_value(data, value):
+    """ Makes more input variables possible. """
+    if isinstance(data, Object):
+        if value == 'location':
+            return data.location
+        elif value == 'velocity':
+            return data.velocity
+        elif value == 'rotation':
+            return data.rotation
+        elif value == 'angular_velocity':
+            return data.angular_velocity
+        else:
+            raise ValueError('Unknown Value (' + value + ')')
+    else:
+        return Vector3(data)
+
+
+def rotator_to_matrix(object):
+    r = to_value(object, 'rotation')
+    CR = math.cos(r[2])
+    SR = math.sin(r[2])
+    CP = math.cos(r[0])
+    SP = math.sin(r[0])
+    CY = math.cos(r[1])
+    SY = math.sin(r[1])
+
+    matrix = []
+    matrix.append(Vector3([CP * CY, CP * SY, SP]))
+    matrix.append(Vector3([CY * SP * SR - CR * SY, SY * SP * SR + CR * CY, -CP * SR]))
+    matrix.append(Vector3([-CR * CY * SP - SR * SY, -CR * SY * SP + SR * CY, CP * CR]))
+    return matrix
