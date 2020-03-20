@@ -14,7 +14,7 @@ I believe this will make starting to program bots much easier, especially for be
     This will make bot making more about strategi and tactics, than good mechanics. You will on the other hand still have a competitive advantage when discovering something new. That is untill someone else figures it out and submitts it here ;)
 
 # Getting Started
-Currently the only way to get the code is by either cloning the project or prefferably, going into the files and using copy paste.
+Currently the only way to get the code is by either cloning the project or going into the files and using copy paste.
 
 I try to supply as much information in the code as possible, but a better README is comming soon...
 
