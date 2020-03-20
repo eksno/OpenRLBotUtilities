@@ -1,5 +1,5 @@
 import math
-from rlutilities.data_classes import Vector3
+from rlutilities.data_classes import Vector3, Object
 
 
 def sign(x):
