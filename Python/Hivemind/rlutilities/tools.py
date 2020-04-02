@@ -8,7 +8,7 @@ def get_player_by_distance_to_target(data, index, target, team=None):
 
     data: Your preprocessed data class.
     index: Index of the sorted distance to target, 0 is the closest, 1 is second closest and so on.
-    target: The target you are mesuring the distances to.
+    target: The target you are measuring the distances to.
     team: -1 or 1, you can input data.team to filter it to just your team or -data.team to filter it to the enemy team.
     """
 
