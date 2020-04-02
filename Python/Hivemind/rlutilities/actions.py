@@ -4,9 +4,8 @@ class Dodger:
     """Class for making dodging easier and more efficient."""
 
     def __init__(self, wait=2.2):
-        """'wait' is the wait period until next dodge is possible. Value is capped to be over 1"""
+        """'wait' is the wait period until next dodge is possible."""
         self.timer = time.time()
-        self.wait = max(wait, 1)
 
     def attempt_dodging(self):
         """Dodges if time since last dodge is over wait. Returns jump and pitch"""
