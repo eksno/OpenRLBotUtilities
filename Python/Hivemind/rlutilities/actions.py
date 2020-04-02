@@ -9,7 +9,7 @@ class Dodger:
         self.timer = time.time()
 
     def attempt_dodging(self):
-        """Dodges if time since last dodge is over wait. Returns jump and pitch"""
+        """Dodges if time since last dodge is over wait. Returns jump and pitch."""
         time_difference = time.time() - self.timer
         if time_difference > self.wait:
             self.timer = time.time()
