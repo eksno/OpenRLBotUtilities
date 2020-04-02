@@ -1,5 +1,6 @@
 import time
 
+
 class Dodger:
     """Class for making dodging easier and more efficient."""
 
