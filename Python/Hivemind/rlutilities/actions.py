@@ -7,6 +7,7 @@ class Dodger:
     def __init__(self, wait=2.2):
         """'wait' is the wait period until next dodge is possible."""
         self.timer = time.time()
+        self.wait = wait
 
     def attempt_dodging(self):
         """Dodges if time since last dodge is over wait. Returns jump and pitch."""
